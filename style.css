@@ -1,0 +1,128 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #004e92, #000428);
+}
+
+h1 {
+    margin: 0 0 2rem 0;
+}
+
+i {
+    font-size: 3.6rem;
+}
+
+.form-container {
+    background: #fff;
+    width: 350px;
+    padding: 30px;
+    margin: 0.7rem;
+    border-radius: 12px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.tab-box {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 11.7px 0;
+    cursor: pointer;
+    border: none;
+    background: #f1f1f1;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.tab-btn.active {
+    background: linear-gradient(to right, #004e92, #000428);
+    color: #fff;
+}
+
+.form-group {
+    margin-bottom: 13px;
+    text-align: left;
+}
+
+.form-group input {
+    width: 93.4%;
+    padding: 10.5px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+.form-group select {
+    width: 100%;
+    color: #656161;
+    padding: 10.5px 7px;
+    font-size: 13.6px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+.form-group a {
+    display: inline-block;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #004e92;
+    text-decoration: none;
+}
+
+.btn {
+    width: 100%;
+    padding: 11.5px 10px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(to right, #004e92, #000428);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.toggle-text {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.toggle-text a {
+    color: #004e92;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.form-box {
+    display: none;
+    animation: fade 0.5s;
+}
+
+.form-box.active {
+    display: block;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
