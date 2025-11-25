@@ -23,7 +23,6 @@ const signup = () => {
     let fullName = document.getElementById("fullName").value;
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
-    let role = document.getElementById("role").value;
     if (fullName.trim() == "" || email.trim() == "" || password.trim() == "") {
         notyf.error("Please fill out fields");
         return;
@@ -32,17 +31,13 @@ const signup = () => {
         notyf.error("Password must be at least 5 characters long");
         return;
     }
-    if (role === "") {
-        notyf.error("Please select your role");
-        return;
-    }
     for (let i = 0; i < users.length; i++) {
         if (users[i].email === email) {
             notyf.error("Email already exist.");
             return;
         }
     }
-    users.push({ fullName, email, password, role, id: Date.now() });
+    users.push({ fullName, email, password, id: Date.now() });
     setTimeout(() => {
         showForm('login');
     }, 1000);

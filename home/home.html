@@ -16,14 +16,82 @@
             color: white;
             transition: all 0.3s ease;
         }
-        .btn-logout:hover {
+        /* .btn-logout:hover {
             background: rgba(255, 255, 255, 0.3);
+        } */
+        /* .navbar-nav .nav-link:hover {
+            color: #0d6efd !important;
+        } */
+        .navbar-brand {
+            font-size: 1.4rem;
         }
+        .user-welcome {
+            color: #d1d1d1;
+        }
+        /* .btn-logout:hover {
+            background: #dc3545 !important;
+            color: #fff !important;
+        } */
+        #filter {
+            min-width: 130px;
+        }
+        /* h2 i {
+            font-size: 1.4rem;
+        } */
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-2">
+        <div class="container">
+
+            <!-- Brand -->
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+                <i class="fas fa-blog me-2"></i> BlogApp
+            </a>
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+
+                <!-- Left Links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active fw-semibold" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" href="./myBlogs/myBlogs.html">My Blogs</a>
+                    </li>
+                </ul>
+
+                <!-- Search -->
+                <form class="d-flex me-3" style="max-width: 240px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-sm" placeholder="Search blogs..."
+                            id="searchInput">
+                        <button class="btn btn-primary btn-sm" type="button" id="searchBtn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- User + Logout -->
+                <div class="d-flex align-items-center gap-3">
+                    <span class="user-welcome text-white small fw-semibold"></span>
+                    <button class="btn btn-outline-light btn-sm" onclick="logout()">
+                        <i class="fas fa-sign-out-alt me-1"></i> Logout
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="#">
                 <i class="fas fa-blog me-2"></i>BlogApp
@@ -40,8 +108,8 @@
                         <a class="nav-link" href="./myBlogs/myBlogs.html">My Blogs</a>
                     </li>
                 </ul>
-                <div class="input-group mb-3" style="max-width: 200px; margin: 13px 25px;">
-                <input type="text" class="form-control" placeholder="Search blogs..." id="searchInput">
+                <div class="input-group mb-3 d-flex align-items-center" style="max-width: 200px; margin: 0px 0px;">
+                    <input type="text" class="form-control" placeholder="Search blogs..." id="searchInput">
                     <button class="btn btn-primary" id="searchBtn" onclick="searchBlog()">
                         <i class="fas fa-search"></i>
                     </button>
@@ -52,14 +120,33 @@
                 </div>
             </div>
         </div>
-    </nav>
+    </nav> -->
 
     <div class="container py-5">
-        <h2 class="mb-4"><i class="fas fa-blog me-2"></i>Recent Blog Posts</h2>
-        <select id="filter" class="form-select w-auto mb-3" onchange="filterBlogs()">
-            <option value="latest">Latest First</option>
-            <option value="oldest">Oldest First</option>
-        </select>
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <!-- Title -->
+            <h2 class="m-0 d-flex align-items-center">
+                <i class="fas fa-blog me-2"></i>
+                Recent Blog Posts
+            </h2>
+            <!-- Sort Filter -->
+            <div class="d-flex align-items-center gap-2">
+                <label for="filter" class="fw-semibold mb-0">Sort by:</label>
+                <select id="filter" class="form-select form-select-sm w-auto" onchange="filterBlogs()">
+                    <option value="latest">Latest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="mostLiked">Most Liked</option>
+                </select>
+            </div>
+        </div>
+        <!-- <div class="d-flex align-items-center">
+            <h2 class="mb-4"><i class="fas fa-blog me-2"></i>Recent Blog Posts</h2>
+            <p>Sort by:</p>
+            <select id="filter" class="form-select w-auto mb-3" onchange="filterBlogs()">
+                <option value="latest">Latest First</option>
+                <option value="oldest">Oldest First</option>
+            </select>
+        </div> -->
         <div class="row" id="blogPosts"></div>
     </div>
 

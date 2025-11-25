@@ -2,6 +2,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     checkAuth();
     getBlogsData();
+    renderLikes();
+    initSearch();
 });
 
 let currentUser = "";
@@ -28,29 +30,35 @@ const getBlogsData = () => {
     renderBlogs(blogs);
 }
 
-const renderBlogs = (blogs) => {
+const renderBlogs = (blogs, order = "latest") => {
     let blogPostsContainer = document.getElementById("blogPosts");
     blogPostsContainer.innerHTML = "";
-    for (let i = blogs.length-1; i >= 0; i--) {
+    let start, end, step;
+    if (order === "latest") {
+        start = blogs.length - 1;
+        end = -1;
+        step = -1;
+    } else {
+        start = 0;
+        end = blogs.length;
+        step = 1;
+    }
+    for (let i = start; i !== end; i += step) {
         blogPostsContainer.innerHTML += `
             <div class="col-md-6 col-lg-4">
                 <div class="card blog-card">
-                    <div class="card-header">
-                        <h5 class="card-title text-white mb-0">${blogs[i].title}</h5>
-                    </div>
-                    <div>
-                        <img src="${blogs[i].imgURL}" class="card-img-top" alt="Blog Image" style="height: 200px; object-fit: cover;">
-                    </div>
+                    <img src="${blogs[i].imgURL}" class="card-img-top" alt="Blog Image" style="height: 230px; border-top-left-radius: 7px; border-top-right-radius: 7px; object-fit: cover;">
                     <div class="card-body">
+                        <h5 class="card-title mb-3">${blogs[i].title}</h5>
                         <p class="text-muted"><i class="fas fa-user me-2"></i>By ${blogs[i].author}</p>
                         <p class="card-text">${blogs[i].desc}</p>
                     </div>
                     <div class="card-footer bg-white">
                         <div class="d-flex justify-content-between">
-                            <small class="text-muted"><i class="fas fa-clock me-1"></i>${new Date(blogs[i].createdAt).toLocaleString()}</small>
+                            <small class="text-muted"><i class="fas fa-clock me-1"></i>${timeAgo(blogs[i].createdAt)}</small>
                             <div>
                                 <button class="btn btn-sm btn-outline-primary me-1" id="like-btn-${blogs[i].id}" onclick="likePost(${blogs[i].id})"><i class="fas fa-thumbs-up"></i></button>
-                                <span id="like-count-${blogs[i].id}">0</span>
+                                <span id="like-count-${blogs[i].id}"></span>
                                 <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-comment"></i></button>
                             </div>
                         </div>
@@ -65,55 +73,57 @@ const filterBlogs = () => {
     let filter = document.getElementById("filter").value;
     if (filter === "latest") {
         renderBlogs(blogs);
+        renderLikes();
     }
     else if (filter === "oldest") {
-        renderOldest(blogs);
-    }
-}
-
-const renderOldest = (blogs) => {
-    let blogPostsContainer = document.getElementById("blogPosts");
-    blogPostsContainer.innerHTML = "";
-    for (let i = 0; i < blogs.length; i++) {
-        blogPostsContainer.innerHTML += `
-            <div class="col-md-6 col-lg-4">
-                <div class="card blog-card">
-                    <div class="card-header">
-                        <h5 class="card-title text-white mb-0">${blogs[i].title}</h5>
-                    </div>
-                    <div>
-                        <img src="${blogs[i].imgURL}" class="card-img-top" alt="Blog Image" style="height: 200px; object-fit: cover;">
-                    </div>
-                    <div class="card-body">
-                        <p class="text-muted"><i class="fas fa-user me-2"></i>By ${blogs[i].author}</p>
-                        <p class="card-text">${blogs[i].desc}</p>
-                    </div>
-                    <div class="card-footer bg-white">
-                        <div class="d-flex justify-content-between">
-                            <small class="text-muted"><i class="fas fa-clock me-1"></i>${new Date(blogs[i].createdAt).toLocaleString()}</small>
-                            <div>
-                                <button class="btn btn-sm btn-outline-primary me-1" id="like-btn-${blogs[i].id}" onclick="likePost(${blogs[i].id})"><i class="fas fa-thumbs-up"></i></button>
-                                <span id="like-count-${blogs[i].id}">0</span>
-                                <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-comment"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
+        renderBlogs(blogs, filter);
+        renderLikes();
+    } else {
+        showMostLikedBlog();
+        renderLikes();
     }
 }
 
 const searchBlog = () =>  {
-    let btn = document.getElementById('searchBtn');
-    let input = document.getElementById('searchInput').value;
-    let blog = []
+    let input = document.getElementById('searchInput');
+    if (input.value.trim() == "") {
+        input.value = "";
+        renderBlogs(blogs);
+        renderLikes();
+        return;
+    }
+    let blogPostsContainer = document.getElementById("blogPosts");
+    blogPostsContainer.innerHTML = "";
+    let blog = [];
+    let isFound = false;
     for (let i = 0; i < blogs.length; i++) {
-        if ((blogs[i].title).toLowerCase() == input.toLowerCase()) {
+        if ((blogs[i].title).toLowerCase() == input.value.toLowerCase()) {
             blog.push(blogs[i]);
+            isFound = true;
         }
     }
+    if (!isFound) {
+        blogPostsContainer.innerHTML = `
+            <div class="col-12 text-center my-5">
+                <h4 class="text-muted">No blog posts found for your search</h4>
+            </div>
+        `;
+        return;
+    }
     renderBlogs(blog);
+    renderLikes();
+}
+
+function initSearch() {
+    const input = document.getElementById("searchInput");
+    const btn = document.getElementById("searchBtn");
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            searchBlog();
+        }
+    });
+    btn.addEventListener("click", searchBlog);
 }
 
 let likes = JSON.parse(localStorage.getItem("likes")) || {};
@@ -133,7 +143,6 @@ const likePost = (blogId) => {
     } else {
         likes[blogId].push(currentUser.id);
     }
-    console.log("done");
     localStorage.setItem("likes", JSON.stringify(likes));
     updateLikeUI(blogId);
 }
@@ -142,13 +151,88 @@ function updateLikeUI(blogId) {
     let likes = JSON.parse(localStorage.getItem("likes")) || {};
     const likeBtn = document.querySelector(`button[onclick="likePost(${blogId})"]`);
     const countSpan = document.getElementById(`like-count-${blogId}`);
+    if (!countSpan) {
+        return;
+    }
+    if (!likeBtn) {
+        return;
+    }
     const count = likes[blogId] ? likes[blogId].length : 0;
+    if (!count) {
+        return;
+    }
     countSpan.innerText = count;
     if (likes[blogId] && likes[blogId].includes(currentUser.id)) {
-        console.log("inside")
         likeBtn.classList.remove("btn-outline-primary");
         likeBtn.classList.add("btn-primary");
+    } else {
+        likeBtn.classList.remove("btn-primary");
+        likeBtn.classList.add("btn-outline-primary");
     }
+}
+
+function renderLikes () {
+    for (let i = 0; i < blogs.length; i++) {
+        updateLikeUI(blogs[i].id);
+    }
+}
+
+function showMostLikedBlog() {
+    const mostLikedId = getMostLikedBlogId();
+    if (!mostLikedId) {
+        let blogPostsContainer = document.getElementById("blogPosts");
+        // blogPostsContainer.innerHTML = "";
+        blogPostsContainer.innerHTML = `
+            <div class="col-12 text-center my-5">
+                <h4 class="text-muted">No likes yet!</h4>
+            </div>
+        `;
+        return;
+    }
+    const blog = getBlogById(mostLikedId, blogs);
+    if (!blog) return alert("Blog not found!");
+
+    renderBlogs([blog]);  // send as single-blog array
+    renderLikes();
+}
+
+function getMostLikedBlogId() {
+    let likes = JSON.parse(localStorage.getItem("likes")) || {};
+    let topBlogId = null;
+    let maxLikes = -1;
+    for (let blogId in likes) {
+        let count = likes[blogId].length;
+        if (count > maxLikes) {
+            maxLikes = count;
+            topBlogId = blogId;
+        }
+    }
+    return topBlogId;
+}
+
+function getBlogById(blogId, blogs) {
+    return blogs.find(blog => blog.id == blogId);
+}
+
+function timeAgo(timestamp) {
+    const seconds = Math.floor((Date.now() - timestamp) / 1000);
+    const intervals = {
+        year: 31536000,
+        month: 2592000,
+        week: 604800,
+        day: 86400,
+        hour: 3600,
+        minute: 60,
+        second: 1
+    };
+    for (let key in intervals) {
+        const value = intervals[key];
+        if (seconds >= value) {
+            const count = Math.floor(seconds / value);
+            return `${count}${key[0]} ago`; // "1m ago", "2h ago"
+        }
+    }
+    return "just now";
 }
 
 const logout = () => {
