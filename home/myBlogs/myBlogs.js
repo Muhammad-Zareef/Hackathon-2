@@ -145,7 +145,7 @@ function renderBlogs(blogs, order = "latest") {
             blogPostsContainer.innerHTML += `
                 <div class="col-md-6 col-lg-4">
                     <div class="card blog-card">
-                        <img src="${blogs[i].imgURL}" class="card-img-top" alt="Blog Image" style="height: 200px; border-top-left-radius: 7px; border-top-right-radius: 7px; object-fit: cover;">
+                        <img src="${blogs[i].imgURL}" class="card-img-top" alt="Blog Image" style="height: 230px; border-top-left-radius: 7px; border-top-right-radius: 7px; object-fit: cover;">
                         <div class="card-body">
                             <h5 class="card-title mb-3">${blogs[i].title}</h5>
                             <p class="text-muted"><i class="fas fa-user me-2"></i>By ${blogs[i].author}</p>
