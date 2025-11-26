@@ -33,6 +33,7 @@ const getBlogsData = () => {
 const renderBlogs = (blogs, order = "latest") => {
     let blogPostsContainer = document.getElementById("blogPosts");
     blogPostsContainer.innerHTML = "";
+    let hasPosts = false;
     let start, end, step;
     if (order === "latest") {
         start = blogs.length - 1;
@@ -44,6 +45,7 @@ const renderBlogs = (blogs, order = "latest") => {
         step = 1;
     }
     for (let i = start; i !== end; i += step) {
+        hasPosts = true;
         blogPostsContainer.innerHTML += `
             <div class="col-md-6 col-lg-4">
                 <div class="card blog-card">
@@ -64,6 +66,13 @@ const renderBlogs = (blogs, order = "latest") => {
                         </div>
                     </div>
                 </div>
+            </div>
+        `;
+    }
+    if (!hasPosts) {
+        blogPostsContainer.innerHTML = `
+            <div class="col-12 text-center my-5">
+                <h4 class="text-muted">Welcome! There are no blogs yet. Create one and start sharing</h4>
             </div>
         `;
     }
