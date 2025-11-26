@@ -181,7 +181,6 @@ function showMostLikedBlog() {
     const mostLikedId = getMostLikedBlogId();
     if (!mostLikedId) {
         let blogPostsContainer = document.getElementById("blogPosts");
-        // blogPostsContainer.innerHTML = "";
         blogPostsContainer.innerHTML = `
             <div class="col-12 text-center my-5">
                 <h4 class="text-muted">No likes yet!</h4>

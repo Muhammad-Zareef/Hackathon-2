@@ -46,6 +46,7 @@ const updateBlog = () => {
     const title = document.getElementById('postTitle').value;
     const author = document.getElementById('postAuthor').value;
     const desc = document.getElementById('postDescription').value;
+    let img = document.querySelector("#updateBlogImage");
     if (title.trim() == "" || author.trim() == "" || desc.trim() == "") {
         Swal.fire({
             icon: "error",
@@ -63,16 +64,35 @@ const updateBlog = () => {
         showConfirmButton: false,
         timer: 2000
     });
-    for (let i = 0; i < blogs.length; i++) {
-        if (blogs[i].id == id) {
-            blogs[i].title = title;
-            blogs[i].author = author;
-            blogs[i].desc = desc;
-            break;
+    if (img.files.length > 0) {
+        const reader = new FileReader();
+        reader.readAsDataURL(img.files[0]);
+        reader.onload = function (e) {
+            img = e.target.result;
+            for (let i = 0; i < blogs.length; i++) {
+                if (blogs[i].id == id) {
+                    blogs[i].title = title;
+                    blogs[i].author = author;
+                    blogs[i].desc = desc;
+                    blogs[i].imgURL = img;
+                    break;
+                }
+            }
+            localStorage.setItem("blogs", JSON.stringify(blogs));
+            getBlogsData();
         }
+    } else {
+        for (let i = 0; i < blogs.length; i++) {
+            if (blogs[i].id == id) {
+                blogs[i].title = title;
+                blogs[i].author = author;
+                blogs[i].desc = desc;
+                break;
+            }
+        }
+        localStorage.setItem("blogs", JSON.stringify(blogs));
+        getBlogsData();
     }
-    localStorage.setItem("blogs", JSON.stringify(blogs));
-    getBlogsData();
 }
 
 const deleteBlog = (id) => {
