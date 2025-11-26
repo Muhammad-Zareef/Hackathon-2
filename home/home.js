@@ -159,6 +159,9 @@ function updateLikeUI(blogId) {
     }
     const count = likes[blogId] ? likes[blogId].length : 0;
     if (!count) {
+        countSpan.innerText = "";
+        likeBtn.classList.remove("btn-primary");
+        likeBtn.classList.add("btn-outline-primary");
         return;
     }
     countSpan.innerText = count;
